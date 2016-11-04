@@ -2,7 +2,7 @@
 
 import argparse
 import os.path
-from os.path import join, abspath, expanduser, isdir, isfile
+from os.path import join, abspath, expanduser, isdir, isfile, normpath
 import sys
 
 from conda_build import external
@@ -47,11 +47,17 @@ def git_source(meta, recipe_dir, GIT_CACHE):
     git_url = meta['git_url']
     if git_url.startswith('.'):
         # It's a relative path from the conda recipe
-        os.chdir(recipe_dir)
-        git_dn = abspath(expanduser(git_url))
-        git_dn = "_".join(git_dn.split(os.path.sep)[1:])
+        git_url = abspath(normpath(os.path.join(recipe_dir, git_url)))
+        if sys.platform == 'win32':
+            git_dn = git_url.replace(':', '_')
+        else:
+            git_dn = git_url[1:]
     else:
-        git_dn = git_url.split(':')[-1].replace('/', '_')
+        git_dn = git_url.split('://')[-1].replace('/', os.sep)
+        if git_dn.startswith(os.sep):
+            git_dn = git_dn[1:]
+        git_dn = git_dn.replace(':', '_')
+    
     cache_repo = cache_repo_arg = join(GIT_CACHE, git_dn)
 
     # update (or create) the cache repo
