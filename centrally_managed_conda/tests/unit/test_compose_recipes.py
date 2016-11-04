@@ -66,10 +66,11 @@ class Test_cli(RecipeCreatingUnit):
         out = subprocess.check_output([sys.executable, '-m', 'centrally_managed_conda.compose_recipes',
                                      '--output-dir={}'.format(output),
                                      channel1, channel2])
-        self.assertEqual(out.strip().decode('utf-8'),
-                         '\n'.join(['Copying channel1/a',
-                                    'Copying channel1/b',
-                                    'Copying channel2/c']))
+
+        self.assertEqual(set(out.strip().decode('utf-8').splitlines()),
+                         set(['Copying channel1/a',
+                              'Copying channel1/b',
+                              'Copying channel2/c']))
         if out.strip():
             print(out.decode('utf-8'))
         # Check they are all there, except for a2.
