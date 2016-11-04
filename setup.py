@@ -9,7 +9,7 @@ setup(
       description='Tools and documentation for deploying centrally managed conda environments.',
       author='Phil Elson',
       author_email='pelson.pub@gmail.com',
-      url='https://github.com/pelson/centrally-managed-conda',
+      url='https://github.com/SciTools-incubator/centrally-managed-conda',
       packages=['centrally_managed_conda'],
      )
 
